@@ -1,5 +1,7 @@
 from gae.layers import GraphConvolution, GraphConvolutionSparse, InnerProductDecoder
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.compat.v1.disable_eager_execution()
+#tf.disable_v2_behavior()
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -43,11 +45,10 @@ class Model(object):
 class GCNModelAE(Model):
     def __init__(self, placeholders, num_features, features_nonzero, **kwargs):
         super(GCNModelAE, self).__init__(**kwargs)
-
-        self.inputs = placeholders['features']
+        self.inputs =placeholders['features_values'], placeholders['features_l2_splits'], placeholders['features_l1_splits'] #placeholders['features']
         self.input_dim = num_features
         self.features_nonzero = features_nonzero
-        self.adj = placeholders['adj']
+        self.adj = placeholders['adj_values'],placeholders['adj_l2_splits'],placeholders['adj_l1_splits']#placeholders['adj']
         self.dropout = placeholders['dropout']
         self.build()
 
